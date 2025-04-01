@@ -1,0 +1,81 @@
+/* Ensure this CSS file is properly imported and applied */
+.login-container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  
+  .background-image {
+    position: absolute;
+    width: 100vw;
+    height: 120vh;
+    top: 0;
+    bottom: 0;
+    background-image: url('https://st2.depositphotos.com/36924814/46071/i/450/depositphotos_460713580-stock-photo-medical-health-blue-cross-neon.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -1;
+    object-fit: cover;
+  }
+  
+  .form-container {
+    padding: 20px;
+    margin: 50px auto;
+    max-width: 400px;
+    max-height: 550px;
+    z-index: 1;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .register-form label {
+    font-weight: bold;
+  }
+  
+  .register-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .register-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .spin-container {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+  }
+  
+  .error-text {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+  }
+  

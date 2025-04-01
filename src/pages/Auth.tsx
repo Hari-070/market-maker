@@ -1,7 +1,9 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
+import { Spin, message } from 'antd';
+import { css } from '@emotion/react'; // for adding styles inline using emotion
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +12,7 @@ const Auth = () => {
   const [error, setError] = useState('');
   const { signIn, signUp } = useAuthStore();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,92 +24,161 @@ const Auth = () => {
         return;
       }
 
+      setLoading(true);
+
       if (isLogin) {
         await signIn(email, password);
       } else {
         await signUp(email, password);
       }
-      navigate('/');
+
+      message.success("Login/Signup successful!");
+
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/'); 
+      }, 1500);
     } catch (err) {
+      setLoading(false);
       setError(err instanceof Error ? err.message : 'An error occurred');
+      message.error('User credentials are incorrect');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {isLogin ? 'Sign in to your account' : 'Create your account'}
-          </h2>
-          {error && (
-            <p className="mt-2 text-center text-sm text-red-600">{error}</p>
-          )}
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
-                />
-              </div>
-            </div>
+    <div css={loginContainerStyle}>
+      <div css={backgroundImageStyle}></div>
+      <div css={formContainerStyle}>
+        {loading ? (
+          <div className="spin-container">
+            <Spin size="large" />
           </div>
+        ) : (
+          <form css={formStyle} onSubmit={handleSubmit}>
+            <h1 className="text-center">{isLogin ? 'Sign in to your account' : 'Create your account'}</h1>
+            {error && <p css={errorTextStyle}>{error}</p>}
 
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            <div css={formItemStyle}>
+              <label>Email address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                required
+                css={inputStyle}
+              />
+            </div>
+
+            <div css={formItemStyle}>
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                css={inputStyle}
+              />
+            </div>
+
+            <button type="submit" css={btnPrimaryStyle}>
               {isLogin ? 'Sign in' : 'Sign up'}
             </button>
-          </div>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-blue-600 hover:text-blue-500"
-            >
-              {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
-            </button>
-          </div>
-        </form>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                css={textButtonStyle}
+              >
+                {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
 };
+
+const loginContainerStyle = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+`;
+
+const backgroundImageStyle = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://st2.depositphotos.com/36924814/46071/i/450/depositphotos_460713580-stock-photo-medical-health-blue-cross-neon.jpg'); /* Add your background image URL here */
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+`;
+
+const formContainerStyle = css`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const formStyle = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const formItemStyle = css`
+  margin-bottom: 15px;
+  width: 100%;
+`;
+
+const inputStyle = css`
+  padding: 10px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+`;
+
+const btnPrimaryStyle = css`
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #40a9ff;
+  }
+`;
+
+const textButtonStyle = css`
+  color: #1890ff;
+  text-decoration: none;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    color: #40a9ff;
+  }
+`;
+
+const errorTextStyle = css`
+  color: red;
+  font-size: 14px;
+`;
 
 export default Auth;

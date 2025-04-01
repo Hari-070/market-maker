@@ -4,22 +4,18 @@ import { supabase } from './lib/supabase';
 import { useAuthStore } from './store/authStore';
 import App from './App';
 import './index.css';
-
-// Initialize auth state
 supabase.auth.getSession().then(({ data: { session } }) => {
-  useAuthStore.getState().setUser(session?.user ?? null);
+  const user = session?.user ? { ...session.user, email: session.user.email ?? '' } : null; 
+  useAuthStore.getState().setUser(user);
 });
 
-// Set up auth state change listener
 supabase.auth.onAuthStateChange((_event, session) => {
-  useAuthStore.getState().setUser(session?.user ?? null);
+  useAuthStore.getState().setUser(session?.user ? { ...session.user, email: session.user.email ?? '' } : null);
 });
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Root element not found');
 
 createRoot(rootElement).render(
-  <StrictMode>
     <App />
-  </StrictMode>
 );
