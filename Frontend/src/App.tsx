@@ -15,16 +15,16 @@ function App() {
         {user && <Navbar />}
         <Routes>
           <Route 
+            path="/auth" 
+            element={!user ? <Auth /> : <Navigate to="/" replace />} 
+          />
+          <Route 
             path="/" 
             element={user ? <Home /> : <Navigate to="/auth" replace />} 
           />
           <Route 
             path="/profile" 
             element={user ? <Profile /> : <Navigate to="/auth" replace />} 
-          />
-          <Route 
-            path="/auth" 
-            element={!user ? <Auth /> : <Navigate to="/" replace />} 
           />
         </Routes>
       </div>

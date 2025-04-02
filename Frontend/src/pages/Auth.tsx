@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { Spin, message } from 'antd';
-import { css } from '@emotion/react'; // for adding styles inline using emotion
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,7 +13,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setError('');
 
@@ -36,7 +35,7 @@ const Auth = () => {
 
       setTimeout(() => {
         setLoading(false);
-        navigate('/'); 
+        navigate('/');
       }, 1500);
     } catch (err) {
       setLoading(false);
@@ -46,19 +45,19 @@ const Auth = () => {
   };
 
   return (
-    <div css={loginContainerStyle}>
-      <div css={backgroundImageStyle}></div>
-      <div css={formContainerStyle}>
+    <div style={styles.loginContainer}>
+      <div style={styles.backgroundImage}></div>
+      <div style={styles.formContainer}>
         {loading ? (
           <div className="spin-container">
             <Spin size="large" />
           </div>
         ) : (
-          <form css={formStyle} onSubmit={handleSubmit}>
-            <h1 className="text-center">{isLogin ? 'Sign in to your account' : 'Create your account'}</h1>
-            {error && <p css={errorTextStyle}>{error}</p>}
+          <form style={styles.formStyle} onSubmit={handleSubmit}>
+            <h1 style={{ textAlign: 'center' }}>{isLogin ? 'Sign in to your account' : 'Create your account'}</h1>
+            {error && <p style={styles.errorText}>{error}</p>}
 
-            <div css={formItemStyle}>
+            <div style={styles.formItem}>
               <label>Email address</label>
               <input
                 type="email"
@@ -66,11 +65,11 @@ const Auth = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 required
-                css={inputStyle}
+                style={styles.input}
               />
             </div>
 
-            <div css={formItemStyle}>
+            <div style={styles.formItem}>
               <label>Password</label>
               <input
                 type="password"
@@ -78,19 +77,19 @@ const Auth = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
-                css={inputStyle}
+                style={styles.input}
               />
             </div>
 
-            <button type="submit" css={btnPrimaryStyle}>
+            <button type="submit" style={styles.btnPrimary}>
               {isLogin ? 'Sign in' : 'Sign up'}
             </button>
 
-            <div className="text-center">
+            <div style={{ textAlign: 'center' }}>
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                css={textButtonStyle}
+                style={styles.textButton}
               >
                 {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
               </button>
@@ -102,83 +101,72 @@ const Auth = () => {
   );
 };
 
-const loginContainerStyle = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f2f5;
-`;
-
-const backgroundImageStyle = css`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('https://st2.depositphotos.com/36924814/46071/i/450/depositphotos_460713580-stock-photo-medical-health-blue-cross-neon.jpg'); /* Add your background image URL here */
-  background-size: cover;
-  background-position: center;
-  z-index: -1;
-`;
-
-const formContainerStyle = css`
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const formStyle = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const formItemStyle = css`
-  margin-bottom: 15px;
-  width: 100%;
-`;
-
-const inputStyle = css`
-  padding: 10px;
-  width: 100%;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-`;
-
-const btnPrimaryStyle = css`
-  background-color: #1890ff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 16px;
-
-  &:hover {
-    background-color: #40a9ff;
-  }
-`;
-
-const textButtonStyle = css`
-  color: #1890ff;
-  text-decoration: none;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 14px;
-
-  &:hover {
-    color: #40a9ff;
-  }
-`;
-
-const errorTextStyle = css`
-  color: red;
-  font-size: 14px;
-`;
+const styles: { [key: string]: React.CSSProperties } = {
+  loginContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: '#f0f2f5',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundImage: "url('https://st2.depositphotos.com/36924814/46071/i/450/depositphotos_460713580-stock-photo-medical-health-blue-cross-neon.jpg')",
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    zIndex: -1,
+  },
+  formContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    width: '100%',
+    maxWidth: 400,
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+  },
+  formStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  formItem: {
+    marginBottom: 15,
+    width: '100%',
+  },
+  input: {
+    padding: 10,
+    width: '100%',
+    borderRadius: 4,
+    border: '1px solid #ccc',
+  },
+  btnPrimary: {
+    backgroundColor: '#1890ff',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: 4,
+    cursor: 'pointer',
+    width: '100%',
+    fontSize: 16,
+    transition: 'background-color 0.3s',
+  },
+  textButton: {
+    color: '#1890ff',
+    textDecoration: 'none',
+    marginTop: 10,
+    cursor: 'pointer',
+    fontSize: 14,
+    background: 'none',
+    border: 'none',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+  },
+};
 
 export default Auth;
