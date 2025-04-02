@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Auth from './pages/Auth';
+import Watchlist from './pages/watchList';
 
 function App() {
   const { user } = useAuthStore();
@@ -25,6 +26,10 @@ function App() {
           <Route 
             path="/profile" 
             element={user ? <Profile /> : <Navigate to="/auth" replace />} 
+          />
+          <Route 
+            path="/watchlist"
+            element={user ? <Watchlist /> : <Navigate to="/auth" replace />}
           />
         </Routes>
       </div>
