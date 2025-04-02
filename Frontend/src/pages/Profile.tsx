@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin } from 'lucide-react';
-import { message } from 'antd'; // Importing the message component for alerts
+import { message } from 'antd'; 
 
 const Profile = () => {
-  // State to hold user data
   const [user, setUser] = useState({
     fullName: '',
     email: '',
     phone: ''
   });
-
-  // State to handle loading and error status
   const [loading, setLoading] = useState(false);
-
-  // Fetch the user's profile data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
       try {
-        // Replace with actual API endpoint to fetch user data
         const response = await fetch('/api/user/profile');
         const data = await response.json();
         setUser({
@@ -35,8 +29,6 @@ const Profile = () => {
 
     fetchUserData();
   }, []);
-
-  // Handle the change of input values
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setUser((prevState) => ({
@@ -45,11 +37,9 @@ const Profile = () => {
     }));
   };
 
-  // Handle form submission
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
-      // Replace with actual API endpoint to save user data
       const response = await fetch('/api/user/profile/update', {
         method: 'POST',
         headers: {

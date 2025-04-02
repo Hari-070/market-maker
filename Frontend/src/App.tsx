@@ -16,11 +16,11 @@ function App() {
         {user && <Navbar />}
         <Routes>
           <Route 
-            path="/auth" 
+            path="/" 
             element={!user ? <Auth /> : <Navigate to="/" replace />} 
           />
           <Route 
-            path="/" 
+            path="/home" 
             element={user ? <Home /> : <Navigate to="/auth" replace />} 
           />
           <Route 

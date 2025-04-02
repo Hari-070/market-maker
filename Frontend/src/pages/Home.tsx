@@ -15,9 +15,9 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000); // Change image every 3 seconds
+    }, 3000); 
 
-    return () => clearInterval(interval); // Clean up interval on component unmount
+    return () => clearInterval(interval);
   }, [images.length]);
 
   useEffect(() => {
@@ -27,12 +27,11 @@ const Home = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gradient-to-r from-blue-50 to-blue-100">
       <div className="flex">
-        {/* Left Side: Image Slider */}
         <div className="w-1/2 h-full overflow-hidden relative">
           <div
             className="absolute inset-0 left-0 w-full h-full flex"
             style={{
-              transform: `translateX(-${currentImageIndex * 100}%)`, // Slide effect for images
+              transform: `translateX(-${currentImageIndex * 100}%)`,
               transition: 'transform 1s ease-in-out',
             }}
           >
@@ -47,8 +46,6 @@ const Home = () => {
             ))}
           </div>
         </div>
-
-        {/* Right Side: Information Content */}
         <div className="w-1/2 p-8">
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-blue-200">
             <div className="flex items-center justify-between mb-4">

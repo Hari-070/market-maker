@@ -35,7 +35,7 @@ const Auth = () => {
 
       setTimeout(() => {
         setLoading(false);
-        navigate('/');
+        navigate('/home');
       }, 1500);
     } catch (err) {
       setLoading(false);

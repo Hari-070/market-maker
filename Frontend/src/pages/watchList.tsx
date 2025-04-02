@@ -1,76 +1,91 @@
 import React, { useState } from 'react';
 
-interface Stock {
+type Stock = {
+  id: number;
   symbol: string;
   name: string;
-}
+  price: number;
+  change: number;
+  changePercent: number;
+};
 
-const sampleStocks: Stock[] = [
-  { symbol: 'AAPL', name: 'Apple Inc.' },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.' },
-  { symbol: 'TSLA', name: 'Tesla Inc.' },
-  { symbol: 'AMZN', name: 'Amazon.com Inc.' },
-  { symbol: 'MSFT', name: 'Microsoft Corporation' },
+const availableStocks: Stock[] = [
+  { id: 1, symbol: 'AAPL', name: 'Apple Inc.', price: 175.36, change: -1.25, changePercent: -0.71 },
+  { id: 2, symbol: 'TSLA', name: 'Tesla Inc.', price: 234.78, change: +3.45, changePercent: +1.49 },
+  { id: 3, symbol: 'GOOGL', name: 'Alphabet Inc.', price: 2895.67, change: +12.89, changePercent: +0.45 },
+  { id: 4, symbol: 'MSFT', name: 'Microsoft Corp.', price: 312.45, change: -0.45, changePercent: -0.14 },
 ];
 
-const Watchlist: React.FC = () => {
-  const [stack, setStack] = useState<Stock[]>(sampleStocks);
-
-  // Add stock to the stack
-  const addStock = (symbol: string, name: string) => {
-    setStack((prevStack) => [...prevStack, { symbol, name }]);
+const Watchlist = () => {
+  const [watchlist, setWatchlist] = useState<Stock[]>([]);
+  const addStock = (stock: Stock) => {
+    if (!watchlist.find((item) => item.id === stock.id)) {
+      setWatchlist([...watchlist, stock]);
+    }
   };
-
-  // Remove stock (LIFO)
-  const removeStock = () => {
-    if (stack.length === 0) return;
-    setStack((prevStack) => prevStack.slice(0, -1));
+  const removeStock = (id: number) => {
+    setWatchlist(watchlist.filter((stock) => stock.id !== id));
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-3xl font-semibold text-center mb-6">📊 Stack-Based Watchlist</h1>
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold text-gray-900 mb-4">📈 My Watchlist</h2>
 
-      <div className="flex gap-3 mb-4">
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-          onClick={() => addStock('NFLX', 'Netflix Inc.')}
+      {/* Dropdown to Add Stocks */}
+      <div className="mb-4 flex space-x-4">
+        <select
+          className="p-2 border border-gray-300 rounded-lg"
+          onChange={(e) => {
+            const stock = availableStocks.find((s) => s.id === Number(e.target.value));
+            if (stock) addStock(stock);
+          }}
         >
-          Add Netflix 🎬
-        </button>
-        <button
-          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-          onClick={removeStock}
-        >
-          Remove Last ❌
-        </button>
+          <option value="">Select a stock to add</option>
+          {availableStocks.map((stock) => (
+            <option key={stock.id} value={stock.id}>
+              {stock.symbol} - {stock.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="p-3">Stock Symbol</th>
-              <th className="p-3">Company Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stack.map((stock, index) => (
-              <tr key={index} className="border-b hover:bg-gray-100">
-                <td className="p-3">{stock.symbol}</td>
-                <td className="p-3">{stock.name}</td>
-              </tr>
-            ))}
-            {stack.length === 0 && (
-              <tr>
-                <td colSpan={2} className="text-center p-4 text-gray-500">
-                  No stocks in the stack
+      {/* Watchlist Table */}
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-3">Stock</th>
+            <th className="p-3">Price ($)</th>
+            <th className="p-3">Change</th>
+            <th className="p-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {watchlist.length > 0 ? (
+            watchlist.map((stock) => (
+              <tr key={stock.id} className="border-t">
+                <td className="p-3 font-semibold">{stock.symbol} - {stock.name}</td>
+                <td className="p-3">${stock.price.toFixed(2)}</td>
+                <td className={`p-3 font-bold ${stock.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {stock.change > 0 ? `+${stock.change.toFixed(2)}` : stock.change.toFixed(2)}
+                  ({stock.changePercent.toFixed(2)}%)
+                </td>
+                <td className="p-3">
+                  <button
+                    onClick={() => removeStock(stock.id)}
+                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-700"
+                  >
+                    Remove ❌
+                  </button>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4} className="p-4 text-center text-gray-500">No stocks in your watchlist</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };
