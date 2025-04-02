@@ -1,7 +1,27 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import { TrendingUp, Newspaper } from 'lucide-react';
+import axios from 'axios';
 
 const Home = () => {
+
+  const [stocks,setStocks]=useState([{}])
+
+  const getStocks=async()=>{
+    try {
+      await axios.get('http://172.17.19.171:5000/api/trending-stocks')
+      .then((res)=>{
+        setStocks(res.data)
+        console.log(stocks)
+      })
+    } catch (error) {
+      console.log("there is an error")
+    }
+  }
+
+  useEffect(()=>{
+    getStocks()
+},[])
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid grid-cols-12 gap-6">
@@ -14,7 +34,7 @@ const Home = () => {
             </div>
             <div className="space-y-4">
               {/* Placeholder for trending stocks */}
-              {[1, 2, 3].map((i) => (
+              {[1,2,3].map((i) => (
                 <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <h3 className="font-semibold">AAPL</h3>
