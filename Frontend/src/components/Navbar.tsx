@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BarChart3, Search, Bell, UserCircle, LogOut } from 'lucide-react';
+import { BarChart3, Search, Bell, UserCircle, LogOut, LineChart } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { message } from 'antd';
 
@@ -38,6 +38,10 @@ const Navbar = () => {
             <button className="p-2 rounded-full hover:bg-blue-200">
               <Bell className="h-6 w-6 text-blue-600" />
             </button>
+
+            <Link to="/watchlist" className="p-2 rounded-full hover:bg-blue-200">
+              <LineChart className="h-6 w-6 text-blue-600" />
+            </Link>
             
             <Link to="/profile" className="ml-4">
               <UserCircle className="h-8 w-8 text-blue-600" />
