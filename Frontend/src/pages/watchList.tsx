@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { message } from 'antd';
 
 type Stock = {
   id: number;
@@ -20,8 +19,7 @@ const Watchlist = () => {
   useEffect(() => {
     const getStocks = async () => {
       try {
-        const res = await axios.get('http://172.17.19.171:5000/api/trending');
-        message.success('Stocks fetched successfully!');
+        const res = await axios.get('http://172.17.5.227:5000/api/trending');
         const formattedStocks = res.data.all_stocks.map((stock: any, index: number) => ({
           id: index,
           symbol: stock.symbol,
@@ -56,13 +54,12 @@ const Watchlist = () => {
   );
 
   return (
-    //className="min-h-screen bg-gradient-to-r from-[#005aa7] to-[#fffde4] p-6"
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-gradient-to-r from-[#005aa7] to-[#fffde4] p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-4">📈 My Watchlist</h2>
 
       <input
         type="text"
-        placeholder="Search stocks..."
+        placeholder="Search stocks..." 
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="p-2 border border-gray-300 rounded-lg w-full mb-4"
@@ -125,16 +122,15 @@ const Watchlist = () => {
 
       <h3 className="text-xl font-semibold text-gray-900 mt-6">Stock Price Analytics</h3>
       <ResponsiveContainer width="100%" height={300}>
-  <LineChart data={watchlist}>
-    <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
-    <XAxis dataKey="symbol" stroke="#333" />
-    <YAxis stroke="#333" />
-    <Tooltip wrapperStyle={{ backgroundColor: "#2196F3", color: "#fff" }} />
-    <Legend />
-    <Line type="monotone" dataKey="price" stroke="#4CAF50" activeDot={{ r: 8 }} />
-  </LineChart>
-</ResponsiveContainer>
-
+        <LineChart data={watchlist}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="symbol" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
