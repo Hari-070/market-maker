@@ -1,48 +1,40 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BarChart3, Search, Bell, UserCircle, LogOut, Home, Eye } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
+// import { useAuthStore } from '../store/authStore';
 import { message } from 'antd';
 
 const Navbar = () => {
-  const { signOut } = useAuthStore();
   const navigate = useNavigate();
-
   const handleSignOut = async () => {
-    await signOut();
-    message.success('You have successfully logged out.');
     navigate('/auth');
+    localStorage.removeItem('token');
+    message.success('You have successfully logged out.');
+    
   };
+  
 
   return (
     <nav className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           
-          {/* Logo Section */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <BarChart3 className="h-8 w-8 text-blue-700" />
               <span className="ml-2 text-2xl font-semibold text-blue-900">StockTracker</span>
             </Link>
           </div>
-
-          {/* Navigation & Actions */}
           <div className="flex items-center space-x-6">
-            
-            {/* Home Button */}
             <Link to="/" className="flex items-center space-x-1 text-blue-700 hover:text-blue-900">
               <Home className="h-6 w-6" />
               <span className="hidden sm:inline-block font-semibold">Home</span>
             </Link>
-
-            {/* Watchlist Button */}
             <Link to="/watchlist" className="flex items-center space-x-1 text-blue-700 hover:text-blue-900">
               <Eye className="h-6 w-6" />
               <span className="hidden sm:inline-block font-semibold">Watchlist</span>
             </Link>
 
-            {/* Search Bar */}
             <div className="relative">
               <input
                 type="text"

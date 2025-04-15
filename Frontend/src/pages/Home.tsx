@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TrendingUp, Newspaper } from 'lucide-react';
 import { message } from 'antd';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const Home = () => {
   const [images] = useState([
@@ -47,6 +48,8 @@ const Home = () => {
   }, []);
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gradient-to-r from-[#005aa7] to-[#fffde4] p-6">
       {/* Image Section */}
       <div className="w-full h-96 overflow-hidden rounded-lg shadow-md mb-6">
@@ -101,6 +104,7 @@ const Home = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

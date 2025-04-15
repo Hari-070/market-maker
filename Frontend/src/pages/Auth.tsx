@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { useAuthStore } from '../store/authStore';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Spin, message } from 'antd';
 
@@ -9,38 +9,46 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { signIn, signUp } = useAuthStore();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');
+    }
+  }, [navigate]);
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
-      if (!isLogin && password.length < 6) {
-        setError('Password must be at least 6 characters long');
-        return;
-      }
+      const endpoint = isLogin
+        ? 'http://localhost:5006/login'
+        : 'http://localhost:5006/register';
 
-      setLoading(true);
+      const res = await axios.post(endpoint, { email, password });
 
       if (isLogin) {
-        await signIn(email, password);
+        localStorage.setItem('token', res.data.token);
+        message.success(res.data.message || 'Login successful!');
+        setTimeout(() => {
+          setLoading(false);
+          navigate('/');
+        }, 1000);
       } else {
-        await signUp(email, password);
-      }
-
-      message.success("Login/Signup successful!");
-
-      setTimeout(() => {
+        message.success('Signup successful! Please login now.');
         setLoading(false);
-        navigate('/');
-      }, 1500);
-    } catch (err) {
+        setIsLogin(true);
+      }
+    } catch (err: any) {
       setLoading(false);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      message.error('User credentials are incorrect');
+      const msg =
+        err?.response?.data?.message || 'Something went wrong';
+      console.error(msg);
+      setError(msg);
+      message.error(msg);
     }
   };
 
@@ -54,7 +62,9 @@ const Auth = () => {
           </div>
         ) : (
           <form style={styles.formStyle} onSubmit={handleSubmit}>
-            <h1 style={{ textAlign: 'center' }}>{isLogin ? 'Sign in to your account' : 'Create your account'}</h1>
+            <h1 style={{ textAlign: 'center' }}>
+              {isLogin ? 'Sign in to your account' : 'Create your account'}
+            </h1>
             {error && <p style={styles.errorText}>{error}</p>}
 
             <div style={styles.formItem}>
@@ -115,7 +125,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundImage: "url('https://st2.depositphotos.com/36924814/46071/i/450/depositphotos_460713580-stock-photo-medical-health-blue-cross-neon.jpg')",
+    backgroundImage:
+      "url('https://wallpapers.com/images/hd/stock-market-digitally-rendered-illustration-ru17vdywswaq7i1g.jpg')",
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     zIndex: -1,

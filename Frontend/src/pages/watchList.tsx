@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Navbar from '../components/Navbar';
 
 type Stock = {
   id: number;
@@ -54,6 +55,8 @@ const Watchlist = () => {
   );
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gradient-to-r from-[#005aa7] to-[#fffde4] p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-4">📈 My Watchlist</h2>
 
@@ -132,6 +135,7 @@ const Watchlist = () => {
         </LineChart>
       </ResponsiveContainer>
     </div>
+    </>
   );
 };
 

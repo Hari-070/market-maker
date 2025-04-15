@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Phone, MapPin } from 'lucide-react';
-import { message } from 'antd'; // Importing the message component for alerts
+import { User, Mail, Phone } from 'lucide-react';
+import { message } from 'antd';
+import Navbar from '../components/Navbar';
 
 const Profile = () => {
-  // State to hold user data
   const [user, setUser] = useState({
     fullName: '',
     email: '',
     phone: ''
   });
-
-  // State to handle loading and error status
   const [loading, setLoading] = useState(false);
 
-  // Fetch the user's profile data on component mount
+  const token = localStorage.getItem('token');
+
+  // Fetch logged-in user's profile
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!token) return;
       setLoading(true);
       try {
-        // Replace with actual API endpoint to fetch user data
-        const response = await fetch('/api/user/profile');
-        const data = await response.json();
+        const res = await fetch('http://localhost:5006/api/user/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch user');
+
+        const data = await res.json();
         setUser({
-          fullName: data.fullName,
-          email: data.email,
-          phone: data.phone
+          fullName: data.fullName || '',
+          email: data.email || '',
+          phone: data.phone || '',
         });
       } catch (error) {
+        console.error(error);
         message.error('Failed to load user data.');
       } finally {
         setLoading(false);
@@ -34,36 +42,30 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [token]);
 
-  // Handle the change of input values
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUser((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
+    setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
-      // Replace with actual API endpoint to save user data
-      const response = await fetch('/api/user/profile/update', {
-        method: 'POST',
+      const res = await fetch('http://localhost:5006/api/user/profile/update', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(user),
       });
 
-      if (response.ok) {
-        message.success('Profile updated successfully!');
-      } else {
-        message.error('Failed to update profile.');
-      }
+      if (!res.ok) throw new Error('Update failed');
+
+      message.success('Profile updated successfully!');
     } catch (error) {
+      console.error(error);
       message.error('An error occurred while updating your profile.');
     } finally {
       setLoading(false);
@@ -71,6 +73,8 @@ const Profile = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gradient-to-r from-[#005aa7] to-[#fffde4] p-6">
       <div className="bg-white rounded-lg shadow">
         <div className="p-6">
@@ -133,7 +137,8 @@ const Profile = () => {
         </div>
       </div>
     </div>
+    </>
   );
-}
+};
 
 export default Profile;
