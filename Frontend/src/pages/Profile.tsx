@@ -12,8 +12,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem('token');
-
-  // Fetch logged-in user's profile
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) return;
