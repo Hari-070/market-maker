@@ -6,6 +6,7 @@ import axios from 'axios';
 const Home = () => {
   const [images] = useState([
     'https://www.bing.com/th/id/OIP.cPK2BNGFa4U4D_BOpzzEkwHaEq?w=188&h=106&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
+    'https://img.freepik.com/free-photo/grwoth-business-launch-success-improvement-concept_53876-128111.jpg?ga=GA1.1.1176099841.1743582418&semt=ais_hybrid',
     'https://www.bing.com/th/id/OIP.BGLdt72KAA9QghNma9xm9QHaEK?w=190&h=106&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
   ]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
